@@ -6,9 +6,12 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "docker:compose": "docker-compose up -d",
     "build": "nest build",
+    "client:dev": "npm run dev --workspace=client",
+    "server:dev": "wait-on tcp:6379 && npm run start:dev --workspace=server",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "concurrently 'npm:docker:compose' 'npm:server:dev' 'npm:client:dev'",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -21,12 +24,22 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.3.3",
     "@nestjs/websockets": "^10.3.3",
-    "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "concurrently": "^8.2.2",
+    "ioredis": "^5.3.2",
+    "logger": "^0.0.1",
+    "nanoid": "^3.3.7",
+    "nestjs-redis": "^1.3.3",
+    "reflect-metadata": "^0.2.1",
+    "rimraf": "^5.0.5",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.7.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -49,7 +62,8 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "wait-on": "^7.2.0"
   },
   "jest": {
     "moduleFileExtensions": [

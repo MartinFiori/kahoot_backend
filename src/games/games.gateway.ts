@@ -6,10 +6,10 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Rooms, User } from './entity/websocket.gateway';
+import { Rooms, User } from './entity/games.entity';
 
 @WebSocketGateway()
-export class WebsocketGateway {
+export class GamesGateway {
   // constructor(private rooms: []) {}
   @WebSocketServer()
   server: Server;
@@ -58,7 +58,7 @@ export class WebsocketGateway {
     const roomFound = this.rooms.get(client_room_id);
     roomFound.push(socket.id);
     socket.handshake.auth.room_id = client_room_id;
-
+    socket.broadcast.to(roomFound).emit("user_connected", `User connected: ${socket.id}`)
     console.log('viendo los usuarios conectados: ', roomFound);
   }
 }
